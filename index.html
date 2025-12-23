@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Aesthetic Architecture | Optimization Protocol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070708;
+            --accent-gold: #fbbf24;
+            --accent-glow: rgba(251, 191, 36, 0.6); 
+        }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* High-Intensity Golden Ambient Background */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 50% -20%, rgba(251, 191, 36, 0.25) 0%, transparent 60%),
+                radial-gradient(circle at 0% 100%, rgba(251, 191, 36, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(217, 119, 6, 0.12) 0%, transparent 40%),
+                linear-gradient(to bottom, #0d0d0e, #050505);
+            z-index: -1;
+        }
+
+        .glow-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.05) 0%, transparent 75%);
+            pointer-events: none;
+            z-index: -1;
+            animation: pulseGlow 8s ease-in-out infinite alternate;
+        }
+
+        .bloom {
+            position: fixed;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.08) 0%, transparent 70%);
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: -1;
+        }
+        .bloom-tl { top: -10%; left: -10%; }
+        .bloom-br { bottom: -10%; right: -10%; background: radial-gradient(circle, rgba(217, 119, 6, 0.06) 0%, transparent 70%); }
+
+        @keyframes pulseGlow {
+            from { opacity: 0.4; transform: scale(1); }
+            to { opacity: 1; transform: scale(1.2); }
+        }
+
+        .glass-card {
+            background: rgba(18, 18, 22, 0.75);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            box-shadow: 0 25px 60px -15px rgba(0,0,0,0.95);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(251, 191, 36, 0.5);
+            box-shadow: 0 0 50px rgba(251, 191, 36, 0.15);
+            background: rgba(24, 24, 30, 0.85);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #fff 20%, #fbbf24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            color: #000;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(217, 119, 6, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 45px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            color: white;
+            appearance: none;
+        }
+
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.15);
+            outline: none;
+        }
+
+        select.input-field option {
+            background-color: #121216;
+            color: white;
+        }
+
+        .step-transition {
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .workout-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+        .workout-table th {
+            text-align: left;
+            padding: 12px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #71717a;
+        }
+        .workout-table td {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 13px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .workout-table tr td:first-child { border-radius: 12px 0 0 12px; font-weight: 600; color: white; }
+        .workout-table tr td:last-child { border-radius: 0 12px 12px 0; color: #fbbf24; font-family: monospace; font-weight: bold; }
+    </style>
+</head>
+<body class="min-h-screen selection:bg-yellow-500/30">
+
+    <div class="bg-glow"></div>
+    <div class="glow-overlay"></div>
+    <div class="bloom bloom-tl"></div>
+    <div class="bloom bloom-br"></div>
+
+    <nav class="p-8 flex justify-between items-center max-w-6xl mx-auto relative z-10">
+        <div class="text-xl font-800 tracking-tighter uppercase text-white">Aesthetic<span class="text-yellow-500">Architecture</span></div>
+        <div class="hidden md:flex space-x-10 text-[10px] font-bold tracking-[0.3em] text-gray-500 uppercase">
+            <span class="hover:text-yellow-400 cursor-pointer transition-colors">Facial Harmony</span>
+            <span class="hover:text-yellow-400 cursor-pointer transition-colors">Posture</span>
+            <span class="hover:text-yellow-400 cursor-pointer transition-colors">Physique</span>
+        </div>
+    </nav>
+
+    <main id="app" class="max-w-5xl mx-auto px-6 pt-8 pb-24 relative z-10">
+        
+        <!-- PAGE 1 — OPT-IN PAGE -->
+        <div id="page-optin" class="step-transition">
+            <div class="text-center mb-20">
+                <span class="inline-block px-5 py-2 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-400 text-[10px] font-bold uppercase tracking-[0.3em] mb-8 shadow-[0_0_30px_rgba(251,191,36,0.2)]">
+                    Elite Aesthetic Optimization
+                </span>
+                <h1 class="text-6xl md:text-8xl font-800 tracking-tighter mb-8 text-gradient">
+                    The Architecture <br>of Presence
+                </h1>
+                <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-light leading-relaxed">
+                    A comprehensive guide to enhancing facial harmony, skeletal alignment, and muscular proportions through science-backed daily protocols.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-5 gap-8 items-start mb-16">
+                <div class="lg:col-span-3 bento-grid">
+                    <div class="glass-card p-8 rounded-3xl col-span-2">
+                        <h3 class="text-yellow-400 font-bold text-[10px] uppercase tracking-[0.2em] mb-4">I. Craniofacial Posture</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Developing optimal tongue posture and nasal breathing to support jawline definition and upper airway health.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-3xl">
+                        <h3 class="text-yellow-400 font-bold text-[10px] uppercase tracking-[0.2em] mb-4">II. Skeletal Alignment</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Correcting anterior pelvic tilt and forward head posture to maximize natural height and presence.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-3xl">
+                        <h3 class="text-yellow-400 font-bold text-[10px] uppercase tracking-[0.2em] mb-4">III. V-Taper Ratio</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Targeted development of the clavicle width (deltoids) and latissimus dorsi to optimize the male silhouette.</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 glass-card p-10 rounded-[2.5rem] relative overflow-hidden">
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-yellow-500/20 blur-[80px] -z-10"></div>
+                    <h3 class="text-2xl font-bold mb-8 text-white tracking-tight">Access Guide</h3>
+                    <form id="optin-form" onsubmit="event.preventDefault(); navigateTo('page-delivery');" class="space-y-5">
+                        <input type="text" placeholder="Full Name" required class="input-field w-full p-4 rounded-xl text-sm">
+                        <input type="email" placeholder="Email Address" required class="input-field w-full p-4 rounded-xl text-sm">
+                        <button type="submit" class="btn-primary w-full font-bold py-5 rounded-2xl text-[11px] uppercase tracking-[0.3em] mt-2">
+                            Get Free Sauce
+                        </button>
+                    </form>
+                    <p class="text-[9px] text-gray-500 text-center mt-6 uppercase tracking-widest opacity-60">Verified Optimization Protocol</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 2 — DELIVERY PAGE -->
+        <div id="page-delivery" class="hidden step-transition">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-white tracking-tight">Asset Retrieval Complete</h2>
+                <p class="text-gray-400 font-light">Your daily habits dictate your long-term aesthetic trajectory.</p>
+            </div>
+
+            <div class="glass-card rounded-[2rem] overflow-hidden border-white/10 mb-12">
+                <div class="bg-white/[0.03] p-8 border-b border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center space-x-6">
+                        <div class="w-14 h-16 bg-yellow-500/10 border border-yellow-500/30 rounded-xl flex items-center justify-center text-[10px] font-black text-yellow-500 shadow-[0_0_30px_rgba(251,191,36,0.2)]">CORE</div>
+                        <div>
+                            <h4 class="font-bold text-base text-white">Aesthetic_Optimization_Manual_v1.0</h4>
+                            <p class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.2em] mt-1">Status: Unlocked</p>
+                        </div>
+                    </div>
+                    <button onclick="togglePdfPreview()" class="px-8 py-3 rounded-full border border-yellow-500/30 text-[10px] font-bold text-yellow-400 hover:bg-yellow-500 hover:text-black transition-all uppercase tracking-widest">
+                        Expand Protocol
+                    </button>
+                </div>
+
+                <div id="pdf-preview" class="hidden p-10 bg-black/40 border-b border-white/5">
+                    <div class="space-y-12">
+                        <section>
+                            <h5 class="text-yellow-500 text-[10px] font-black uppercase tracking-[0.3em] mb-4 flex items-center">
+                                <span class="w-8 h-px bg-yellow-500/30 mr-3"></span> MORNING: FACIAL HARMONY & POSTURE
+                            </h5>
+                            <table class="workout-table">
+                                <thead><tr><th>Protocol</th><th>Duration</th><th>Metric</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Craniofacial Alignment (Mewing)</td><td>24/7 Passive</td><td>Consistent</td></tr>
+                                    <tr><td>Cervical Spine Decompression</td><td>5 Minutes</td><td>Daily</td></tr>
+                                    <tr><td>Hydration & Electrolyte Load</td><td>750ml</td><td>Immediate</td></tr>
+                                    <tr><td>Cold Water Exposure (Vascularity)</td><td>2 Minutes</td><td>Sub-Zero</td></tr>
+                                </tbody>
+                            </table>
+                        </section>
+
+                        <section>
+                            <h5 class="text-yellow-500 text-[10px] font-black uppercase tracking-[0.3em] mb-4 flex items-center">
+                                <span class="w-8 h-px bg-yellow-500/30 mr-3"></span> WEEKLY: PHYSIQUE ARCHITECTURE
+                            </h5>
+                            <table class="workout-table">
+                                <thead><tr><th>Target Area</th><th>Volume</th><th>Goal</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Lateral Deltoid (Width)</td><td>12-16 Sets/Week</td><td>Clavicular Emphasis</td></tr>
+                                    <tr><td>Upper Pectoral Sternal Head</td><td>10-12 Sets/Week</td><td>Thoracic Projection</td></tr>
+                                    <tr><td>Core Stability & Vacuum</td><td>Daily (10m)</td><td>Midsection Control</td></tr>
+                                    <tr><td>Dorsal Width (Lats)</td><td>12-14 Sets/Week</td><td>V-Taper Ratio</td></tr>
+                                </tbody>
+                            </table>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="p-16 text-center bg-yellow-500/[0.02]">
+                    <h3 class="text-2xl font-bold mb-6 text-white tracking-tight">Personalized Coaching</h3>
+                    <p class="text-gray-400 text-sm mb-10 max-w-md mx-auto leading-relaxed">The manual is a baseline. For those seeking peak-tier results, we offer 1-on-1 strategic guidance to master your proportions and reach your physical potential.</p>
+                    <button onclick="navigateTo('page-application')" class="btn-primary px-12 py-5 rounded-2xl font-bold text-[10px] uppercase tracking-[0.3em]">
+                        Apply for Coaching
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 3 — APPLICATION PAGE -->
+        <div id="page-application" class="hidden step-transition">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4 text-white tracking-tight">Coaching Application</h2>
+                    <p class="text-gray-500 font-bold text-[10px] uppercase tracking-[0.4em]">Strategic Intake Phase</p>
+                </div>
+
+                <div class="glass-card p-12 rounded-[2.5rem]">
+                    <form onsubmit="event.preventDefault(); navigateTo('page-thankyou');" class="space-y-10">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="space-y-3">
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Applicant Name</label>
+                                <input type="text" required class="input-field w-full p-4 rounded-xl text-sm">
+                            </div>
+                            <div class="space-y-3">
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Current Focus Area</label>
+                                <input type="text" placeholder="Posture / Facial / Proportions" required class="input-field w-full p-4 rounded-xl text-sm">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="space-y-3">
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Willing to invest in yourself?</label>
+                                <select required class="input-field w-full p-4 rounded-xl text-sm">
+                                    <option value="" disabled selected>Select Commitment</option>
+                                    <option value="yes">Yes, I am fully committed</option>
+                                    <option value="maybe">I am considering my options</option>
+                                </select>
+                            </div>
+                            <div class="space-y-3">
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Target Monthly Budget</label>
+                                <select required class="input-field w-full p-4 rounded-xl text-sm">
+                                    <option value="" disabled selected>Select Range</option>
+                                    <option value="100-300">$100 - $300</option>
+                                    <option value="300-500">$300 - $500</option>
+                                    <option value="500-1000">$500 - $1,000</option>
+                                    <option value="1000+">$1,000+</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            <div class="space-y-3">
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Primary Objective</label>
+                                <textarea rows="3" required placeholder="Describe your long-term aesthetic goals..." class="input-field w-full p-4 rounded-xl text-sm"></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary w-full font-bold py-6 rounded-2xl text-[11px] uppercase tracking-[0.3em]">
+                            Submit Application
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 4 — THANK YOU PAGE -->
+        <div id="page-thankyou" class="hidden step-transition py-24 text-center">
+            <div class="w-28 h-28 bg-yellow-500/10 rounded-3xl flex items-center justify-center mx-auto mb-10 border border-yellow-500/30 rotate-12 shadow-[0_0_40px_rgba(251,191,36,0.25)]">
+                <svg class="w-12 h-12 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h2 class="text-5xl font-bold mb-6 text-gradient tracking-tighter">Application Queued</h2>
+            <p class="text-gray-400 font-light max-w-md mx-auto mb-16 text-base leading-relaxed">Your profile has been logged. A strategic assessment will be finalized within 48 business hours.</p>
+            <button onclick="location.reload()" class="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-600 hover:text-yellow-400 transition-colors">Return to Dashboard</button>
+        </div>
+
+    </main>
+
+    <footer class="text-center pb-12 opacity-40 relative z-10">
+        <p class="text-[9px] font-bold text-gray-500 uppercase tracking-[0.6em]">&copy; MMXXIV AESTHETIC ARCHITECTURE PROTOCOL</p>
+    </footer>
+
+    <script>
+        function navigateTo(pageId) {
+            document.querySelectorAll('[id^="page-"]').forEach(p => p.classList.add('hidden'));
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function togglePdfPreview() {
+            const preview = document.getElementById('pdf-preview');
+            preview.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
